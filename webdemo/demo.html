@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/lindat.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    <script src="js/jquery.min.js"></script>
+
+    <title>CloudASR</title>
+</head>
+<body>
+
+
+<script src="js/socket.io.js"></script>
+<script src="js/Recorder.js"></script>
+<script src="js/SpeechRecognition.js"></script>
+<script src="js/models.js"></script>
+<script src="js/main.js"></script>
+<script>
+var apiUrl = "https://scw.smartcommunitylab.it";
+var apiResource ="asr";
+var availableWorkersUrl = "available_workers";
+var model = "it-small";
+var user_id = null;
+</script>
+
+
+<h1>CloudASR <small>Dictate demo</small></h1>
+
+<p class="text-center">
+    <a id="start_recording" class="btn"><img src="img/microphone.png" /></a>
+    <a id="stop_recording" class="btn btn-danger" style="display: none"><img src="img/microphone_speech.png" /></a>
+</p>
+
+<p id="start_recording_text" class="text-center lead">
+    Click on the microphone to <strong>record your speech</strong>.
+</p>
+
+<p id="stop_recording_text" class="text-center lead" style="display: none">
+    Click on the microphone to <strong>stop recording</strong>.
+</p>
+
+<div>
+    <canvas id="canvas" style="display: none; width: 100%; height: 100px"></canvas>
+</div>
+
+<div id="error" class="alert alert-danger text-center" role="alert" style="display: none"></div>
+
+<br>
+
+<div class="well well-lg">
+    <div id="result-evaluation" style="display: none"></div>
+    <div id="result-dictation"></div>
+    <div class="text-right" style="color: #777; display: none"><small id="request_id"></small></div>
+</div>
+
+<div class="well" style="margin-top: 20px">
+    <h3 class="lang-name"></h3>
+    <div id="en-voxforge" class="lang-description"></div>
+</div>
+
+<div class="well" style="margin-top: 20px">
+    <h4>Privacy &amp; Terms</h4>
+    <p>
+        All data, including audio recording, is stored for the purpose of ASR quality improvement.
+        Note that the data can be shared with third parties for both research and commercial purposes.
+        All collected data will be made available to the ASR community;
+            therefore, do not say anything you do not want anyone to know about.
+    </p>
+
+    <p>
+        The service is available for free.
+        As a result, no guarantees are given regarding the quality of ASR results.
+        As of now, it is a beta product; thus,
+            things may break and the service may not be available for large periods of time.
+    </p>
+</div>
+</body>
+</html>
