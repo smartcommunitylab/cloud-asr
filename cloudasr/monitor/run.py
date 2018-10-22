@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify, render_template, copy_current_request_context, session
-from flask_socketio import SocketIO, emit
+from flask import Flask, request, jsonify, render_template, copy_current_request_context
+from flask.ext.socketio import SocketIO, emit, session
 import gevent
 from lib import create_monitor
 import os

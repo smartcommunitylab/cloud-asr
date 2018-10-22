@@ -1,23 +1,39 @@
 import os
 from flask import Flask, Response, flash, render_template, redirect, request, url_for, session, jsonify, stream_with_context
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from flask_googlelogin import GoogleLogin
-from flask_principal import Principal, Permission, RoleNeed, UserNeed, AnonymousIdentity, Identity, identity_loaded, identity_changed
-from flask_sqlalchemy import SQLAlchemy
+from flask.ext.login import LoginManager, login_user, logout_user, login_required, current_user
+from flask.ext.googlelogin import GoogleLogin
+from flask.ext.principal import Principal, Permission, RoleNeed, UserNeed, AnonymousIdentity, Identity, identity_loaded, identity_changed
+from flask.ext.sqlalchemy import SQLAlchemy
 from lib import run_worker_on_marathon
 from cloudasr.schema import db
 from cloudasr.models import UsersModel, RecordingsModel, WorkerTypesModel
 
 
 app = Flask(__name__)
-app.config.update(
-    SECRET_KEY = '12345',
-    DEBUG = 'DEBUG' in os.environ,
-    GOOGLE_LOGIN_CLIENT_ID = os.environ['GOOGLE_LOGIN_CLIENT_ID'],
-    GOOGLE_LOGIN_CLIENT_SECRET = os.environ['GOOGLE_LOGIN_CLIENT_SECRET'],
-    GOOGLE_LOGIN_SCOPES = 'https://www.googleapis.com/auth/userinfo.email',
-    SQLALCHEMY_DATABASE_URI = os.environ['CONNECTION_STRING']
-)
+
+if 'CONNECTION_STRING' in os.environ:
+    app.config.update(
+        SECRET_KEY = '12345',
+        DEBUG = 'DEBUG' in os.environ,
+        GOOGLE_LOGIN_CLIENT_ID = os.environ['GOOGLE_LOGIN_CLIENT_ID'],
+        GOOGLE_LOGIN_CLIENT_SECRET = os.environ['GOOGLE_LOGIN_CLIENT_SECRET'],
+        GOOGLE_LOGIN_SCOPES = 'https://www.googleapis.com/auth/userinfo.email',
+        SQLALCHEMY_DATABASE_URI = os.environ['CONNECTION_STRING']
+    )
+elif 'CONNECTION_STRING_FILE' in os.environ:
+    scrfilepath = os.environ['CONNECTION_STRING_FILE']
+    fl = open(scrfilepath,"r")
+    app.config.update(
+        SECRET_KEY = '12345',
+        DEBUG = 'DEBUG' in os.environ,
+        GOOGLE_LOGIN_CLIENT_ID = os.environ['GOOGLE_LOGIN_CLIENT_ID'],
+        GOOGLE_LOGIN_CLIENT_SECRET = os.environ['GOOGLE_LOGIN_CLIENT_SECRET'],
+        GOOGLE_LOGIN_SCOPES = 'https://www.googleapis.com/auth/userinfo.email',
+        SQLALCHEMY_DATABASE_URI = fl.readline().replace('\n', '')
+    )
+    fl.close()
+else:
+    print "No connection string set in environ"
 
 login_manager = LoginManager(app)
 google_login = GoogleLogin(app, login_manager)

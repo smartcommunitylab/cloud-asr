@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: cloud-asr
+    tier: mysql
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: cloud-asr
+spec:
+  selector:
+    matchLabels:
+      app: cloud-asr
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cloud-asr
+        tier: mysql
+    spec:
+      nodeSelector:
+        task: manager
+      containers:
+      - image: mysql:5.7.19
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: root_password
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        - name: MYSQL_USER
+          value: "cloudasr"
+        - name: MYSQL_DATABASE
+          value: "cloudasr"
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-config
+          mountPath: /etc/mysql/conf.d/mysql_utf8.cnf
+          subPath: mysql_utf8.cnf
+        - name: mysql-config
+          mountPath: /docker-entrypoint-initdb.d/schema.sql
+          subPath: schema.sql
+      volumes:
+      - name: mysql-config
+        configMap:
+          name: mysql
+
+
+
+                
+
+

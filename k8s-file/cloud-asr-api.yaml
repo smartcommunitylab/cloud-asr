@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-host-port
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: cloud-asr
+    tier: api
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app: cloud-asr
+spec:
+  selector:
+    matchLabels:
+      app: cloud-asr
+      tier: api
+  template:
+    metadata:
+      labels:
+        app: cloud-asr
+        tier: api
+    spec:
+      nodeSelector:
+        task: manager
+      containers:
+        - image: smartcommunitylab/cloud-asr-api
+          name: api
+          ports:
+            - containerPort: 80
+              name: api-host
+          env:
+            - name: CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: connection-string
+                  key: string
+            - name: MASTER_ADDR
+              value: "tcp://master:5679"

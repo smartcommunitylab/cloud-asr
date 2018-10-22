@@ -1,0 +1,19 @@
+version: "3"
+services:
+  jenkins:
+    image: jenkins/jenkins:lts-alpine
+    deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+    ports:
+     - 8080
+     - 50000
+    networks:
+      - public
+    volumes:
+     - 'master_data:/var/jenkins_home'
+volumes:
+  master_data:
+networks:
+  public:
+    external: true

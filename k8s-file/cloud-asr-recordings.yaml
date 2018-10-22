@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: recordings-host-port
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: cloud-asr
+    tier: recordings
+  type: LoadBalancer 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recordings
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 5682 
+      targetPort: 5682
+      name: recordings-saver
+  selector:
+    app: cloud-asr
+    tier: recordings
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recordings
+  labels:
+    app: cloud-asr
+spec:
+  selector:
+    matchLabels:
+      app: cloud-asr
+      tier: recordings
+  template:
+    metadata:
+      labels:
+        app: cloud-asr
+        tier: recordings
+    spec:
+      nodeSelector:
+        task: manager
+      containers:
+        - image: smartcommunitylab/cloud-asr-recordings
+          name: recordings
+          ports:
+            - containerPort: 80
+              name: recording-host
+            - containerPort: 5682
+              name: recording-save
+          env:
+            - name: CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: connection-string
+                  key: string
+            - name: STORAGE_PATH
+              value: "/opt/app/static/data"
+            - name: DOMAIN
+              value: "http://recordings:30002"
+

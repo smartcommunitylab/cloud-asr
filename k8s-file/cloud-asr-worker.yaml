@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker-host
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 5678
+      targetPort: 5678
+      name: worker-host
+  selector:
+    app: cloud-asr
+    tier: worker
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: cloud-asr
+spec:
+  selector:
+    matchLabels:
+      app: cloud-asr
+      tier: worker
+  template:
+    metadata:
+      labels:
+        app: cloud-asr
+        tier: worker
+    spec:
+      nodeSelector:
+        task: worker
+      containers:
+        - image: smartcommunitylab/cloud-asr-worker-en-towninfo:latest
+          name: worker
+          ports:
+            - containerPort: 5678
+              name: worker-host
+          command: ['/bin/bash']
+          args: ['-c','while true; do python run.py; done']
+          env:
+            - name: CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: connection-string
+                  key: string
+            - name: MASTER_ADDR
+              value: "tcp://master:5678"
+            - name: API_URL
+              value: "http://api:30000"
+            - name: RECORDINGS_SAVER_ADDR
+              value: "tcp://recordings:5682"
+            - name: MODEL
+              value: "it-small"
+            - name: PORT0
+              value: "5678"
+            - name: HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP

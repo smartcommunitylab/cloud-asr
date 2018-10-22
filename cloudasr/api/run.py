@@ -1,19 +1,32 @@
 import os
 import json
-from flask import Flask, Response, request, jsonify, stream_with_context, session
-from flask_cors import CORS
-from flask_socketio import SocketIO, emit
+from flask import Flask, Response, request, jsonify, stream_with_context
+from flask.ext.cors import CORS
+from flask.ext.socketio import SocketIO, emit, session
 from lib import create_frontend_worker, MissingHeaderError, NoWorkerAvailableError, WorkerInternalError
 from cloudasr.schema import db
 from cloudasr.models import UsersModel, RecordingsModel, WorkerTypesModel
 
 
 app = Flask(__name__)
-app.config.update(
-    SECRET_KEY = '12345',
-    DEBUG = 'DEBUG' in os.environ,
-    SQLALCHEMY_DATABASE_URI = os.environ['CONNECTION_STRING']
-)
+if 'CONNECTION_STRING' in os.environ:
+    app.config.update(
+        SECRET_KEY = '12345',
+        DEBUG = 'DEBUG' in os.environ,
+        SQLALCHEMY_DATABASE_URI = os.environ['CONNECTION_STRING']
+    )
+elif 'CONNECTION_STRING_FILE' in os.environ:
+    scrfilepath = os.environ['CONNECTION_STRING_FILE']
+    fl = open(scrfilepath,"r")
+    app.config.update(
+        SECRET_KEY = '12345',
+        DEBUG = 'DEBUG' in os.environ,
+        SQLALCHEMY_DATABASE_URI = fl.readline().replace('\n', '')
+    )
+    fl.close()
+else:
+    print "No connection string set in environ"
+
 cors = CORS(app)
 socketio = SocketIO(app)
 db.init_app(app)

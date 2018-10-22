@@ -1,4 +1,4 @@
-FROM ufaldsg/cloud-asr-base
+FROM smartcommunitylab/cloud-asr-base
 
 MAINTAINER Ondrej Klejch
 

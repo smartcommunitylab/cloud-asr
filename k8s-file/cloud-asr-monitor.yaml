@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitor-host-port
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: cloud-asr
+    tier: monitor
+  type: LoadBalancer  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: monitor 
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 5680 
+      targetPort: 5680
+      name: monitor-status
+  selector:
+    app: cloud-asr
+    tier: monitor
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitor
+  labels:
+    app: cloud-asr
+spec:
+  selector:
+    matchLabels:
+      app: cloud-asr
+      tier: monitor
+  template:
+    metadata:
+      labels:
+        app: cloud-asr
+        tier: monitor
+    spec:
+      nodeSelector:
+        task: manager
+      containers:
+        - image: smartcommunitylab/cloud-asr-monitor
+          name: monitor
+          ports:
+            - containerPort: 80
+              name: monitor-host
+            - containerPort: 5680
+              name: monitor-status
+          env:
+            - name: MONITOR_ADDR
+              value: "tcp://0.0.0.0:5680"
+
+

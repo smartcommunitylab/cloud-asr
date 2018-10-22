@@ -1,0 +1,154 @@
+version: '3.7'
+networks:
+   clasr-net:
+        driver: overlay
+        attachable: true
+secrets:
+    mysql_root_password:
+        external: true
+    mysql_password:
+        external: true
+    connection_string:
+        external: true
+
+services:
+    mysql:
+        image: mysql:5.7.19
+        ports:
+            - 3306
+        environment:
+            - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+            - MYSQL_USER=cloudasr
+            - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+            - MYSQL_DATABASE=cloudasr
+        volumes:
+            - ../deployment/script:/docker-entrypoint-initdb.d
+            - ../resources/mysql_utf8.cnf:/etc/mysql/conf.d/mysql_utf8.cnf
+        command: [--ssl=0]
+        deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+        healthcheck:
+            test: ["CMD", "mysqladmin" ,"ping", "-uroot", "-proot"]
+            interval: 10s
+            timeout: 60s
+            retries: 5
+        secrets:
+            - mysql_root_password
+            - mysql_password
+        networks:
+            - clasr-net
+    master:
+        image: smartcommunitylab/cloud-asr-master:latest
+        ports:
+            - 5678:5678 #master_to_worker_port
+            - 5679:5679 #master_to_api_port
+        deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+            resources:
+                limits:
+                    memory: 256M
+                    cpus: '0.25'
+                reservations:
+                    memory: 128M
+        environment:
+            - WORKER_ADDR=tcp://0.0.0.0:5678
+            - API_ADDR=tcp://0.0.0.0:5679
+            - MONITOR_ADDR=tcp://monitor:5680
+        networks:
+            - clasr-net
+    monitor:
+        image: smartcommunitylab/cloud-asr-monitor:latest
+        ports:
+            - 80 #monitor_host_port
+            - 5680:5680 #monitor_status_portMYSQL_USER=cloudasr
+        environment:
+            - MONITOR_ADDR=tcp://0.0.0.0:5680
+        deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+            resources:
+                limits:
+                    memory: 256M
+                    cpus: '0.25'
+                reservations:
+                    memory: 128M
+        networks:
+            - clasr-net
+    recordings:
+        image: smartcommunitylab/cloud-asr-recordings:secret
+        ports:
+            - 80 #recordings_host_port    
+            - 5682:5682 #recordings_saver_port
+        volumes:
+            - ../recordings:/opt/app/static/data
+        depends_on:
+            - mysql        
+        environment:            
+            - CONNECTION_STRING_FILE=/run/secrets/connection_string
+            - STORAGE_PATH=/opt/app/static/data
+            - DOMAIN=https://cloudasr.smartcommunitylab.it:8002
+        deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+            resources:
+                limits:
+                    memory: 256M
+                    cpus: '0.25'
+                reservations:
+                    memory: 128M
+        secrets:
+            - connection_string
+        networks:
+            - clasr-net
+    api:
+        image: smartcommunitylab/cloud-asr-api:secret
+        ports:
+            - 80 #api_host_port
+        depends_on:
+             - mysql
+        environment:
+            - MASTER_ADDR=tcp://master:5679
+            - CONNECTION_STRING_FILE=/run/secrets/connection_string            
+        deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+            resources:
+                limits:
+                    memory: 256M
+                    cpus: '0.25'
+                reservations:
+                    memory: 128M
+        secrets:
+            - connection_string
+        networks:
+            - clasr-net
+    web:
+        image: smartcommunitylab/cloud-asr-web:secret
+        ports:
+            - 80 #web_host_port
+        depends_on:
+            - mysql
+        environment:
+            - CONNECTION_STRING_FILE=/run/secrets/connection_string 
+            - API_URL=https://cloudasr.smartcommunitylab.it:8000
+            - MASTER_ADDR=tcp://master:5678
+            - RECORDINGS_SAVER_ADDR=tcp://recordings:5682
+            - GOOGLE_LOGIN_CLIENT_ID=""
+            - GOOGLE_LOGIN_CLIENT_SECRET=""
+            - GA_TRACKING_ID=""
+            - DEBUG=DEBUG
+        deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+            resources:
+                limits:
+                    memory: 256M
+                    cpus: '0.25'
+                reservations:
+                    memory: 128M
+        secrets:
+            - connection_string
+        networks:
+            - clasr-net

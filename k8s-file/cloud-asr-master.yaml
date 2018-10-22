@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: master
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 5678 
+      targetPort: 5678
+      name: master-worker
+      port: 5679 
+      targetPort: 5679
+      name: master-api
+  selector:
+    app: cloud-asr
+    tier: master
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: master
+  labels:
+    app: cloud-asr
+spec:
+  selector:
+    matchLabels:
+      app: cloud-asr
+      tier: master
+  template:
+    metadata:
+      labels:
+        app: cloud-asr
+        tier: master
+    spec:
+      nodeSelector:
+        task: manager
+      containers:
+        - image: smartcommunitylab/cloud-asr-master
+          name: master
+          ports:
+            - containerPort: 5678
+              name: master-worker
+            - containerPort: 5679
+              name: master-api
+          env:
+            - name: WORKER_ADDR
+              value: "tcp://0.0.0.0:5678"
+            - name: API_ADDR
+              value: "tcp://0.0.0.0:5679"
+            - name: MONITOR_ADDR
+              value: "tcp://monitor:5680"
+
+

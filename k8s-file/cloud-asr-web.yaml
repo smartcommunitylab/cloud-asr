@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-host-port
+  labels:
+    app: cloud-asr
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: cloud-asr
+    tier: web
+  type: LoadBalancer  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: cloud-asr
+spec:
+  selector:
+    matchLabels:
+      app: cloud-asr
+      tier: web
+  template:
+    metadata:
+      labels:
+        app: cloud-asr
+        tier: web
+    spec:
+      nodeSelector:
+        task: manager
+      containers:
+        - image: smartcommunitylab/cloud-asr-web
+          name: web
+          ports:
+            - containerPort: 80
+              name: web-host
+          env:
+            - name: CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: connection-string
+                  key: string
+            - name: MASTER_ADDR
+              value: "tcp://master:5678"
+            - name: API_URL
+              value: "http://api-host-port"
+            - name: RECORDINGS_SAVER_ADDR
+              value: "tcp://recordings:5682"
+            - name: GOOGLE_LOGIN_CLIENT_ID
+              value: ""
+            - name: GOOGLE_LOGIN_CLIENT_SECRET 
+              value: ""
+

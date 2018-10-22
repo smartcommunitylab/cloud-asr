@@ -1,5 +1,5 @@
 SHELL=/bin/bash
-IP=10.100.210.17
+IP=`(docker-machine ip dev || (ip addr show en0 | grep -Po 'inet \K[\d.]+') || (ip addr show eth0 | grep -Po 'inet \K[\d.]+') || (ip addr show docker0 | grep -Po 'inet \K[\d.]+')) 2> /dev/null`
 DEMO_URL=http://${IP}:8003/demo/en-towninfo
 MONITOR_URL=http://${IP}:8001/
 MESOS_SLAVE_IP=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' mesos-slave`
@@ -35,6 +35,7 @@ MASTER_OPTS=--name master \
 	-e MONITOR_ADDR=${MONITOR_STATUS_ADDR} \
 	${MASTER_VOLUMES}
 
+MODEL_URL="https://github.com/UFAL-DSG/cloud-asr/blob/master/resources/model.zip?raw=true"
 WORKER_VOLUMES=-v ${CURDIR}/cloudasr/worker:/opt/app -v ${SHARED_VOLUME} -v ${CURDIR}/resources/:/opt/resources/
 WORKER_OPTS=--name worker \
 	-p ${WORKER_PORT}:${WORKER_PORT} \
@@ -100,41 +101,33 @@ build:
 	docker build -t ufaldsg/cloud-asr-base cloudasr/shared
 	docker build -t ufaldsg/cloud-asr-web cloudasr/web
 	docker build -t ufaldsg/cloud-asr-api cloudasr/api/
-	docker build -t ufaldsg/cloud-asr-worker cloudasr/worker/
+	docker build -t ufaldsg/cloud-asr-worker --build-arg MODEL_URL="${MODEL_URL}" cloudasr/worker/
 	docker build -t ufaldsg/cloud-asr-master cloudasr/master/
 	docker build -t ufaldsg/cloud-asr-monitor cloudasr/monitor/
 	docker build -t ufaldsg/cloud-asr-recordings cloudasr/recordings/
 
 build_local:
-#	docker build -t ufaldsg/cloud-asr-base cloudasr/shared
 	cp -r cloudasr/shared/cloudasr cloudasr/api/cloudasr
 	cp -r cloudasr/shared/cloudasr cloudasr/worker/cloudasr
 	cp -r cloudasr/shared/cloudasr cloudasr/master/cloudasr
 	cp -r cloudasr/shared/cloudasr cloudasr/monitor/cloudasr
 	cp -r cloudasr/shared/cloudasr cloudasr/recordings/cloudasr
-	cp -r cloudasr/shared/cloudasr cloudasr/web/cloudasr
 	docker build -t ufaldsg/cloud-asr-api cloudasr/api/
 	docker build -t ufaldsg/cloud-asr-worker cloudasr/worker/
 	docker build -t ufaldsg/cloud-asr-master cloudasr/master/
 	docker build -t ufaldsg/cloud-asr-monitor cloudasr/monitor/
 	docker build -t ufaldsg/cloud-asr-recordings cloudasr/recordings/
-	docker build -t ufaldsg/cloud-asr-web cloudasr/web
 	rm -rf cloudasr/api/cloudasr
 	rm -rf cloudasr/worker/cloudasr
 	rm -rf cloudasr/master/cloudasr
 	rm -rf cloudasr/monitor/cloudasr
 	rm -rf cloudasr/recordings/cloudasr
-	rm -rf cloudasr/web/cloudasr
-remove-all:
-	docker stop $(docker container list -a -q)
-	docker rm $(docker container list -a -q)
-	docker rmi $(docker images -a)
 
 remove-images:
 	docker images | grep "ufaldsg/" | awk '{print $$3}' | xargs docker rmi
 
 pull:
-	docker pull mysql
+	docker pull mysql:5
 	docker pull ufaldsg/cloud-asr-web
 	docker pull ufaldsg/cloud-asr-api
 	docker pull ufaldsg/cloud-asr-worker
@@ -144,7 +137,7 @@ pull:
 
 mysql_data:
 	echo "PREPARING MySQL DATABASE"
-	docker run ${MYSQL_OPTS} -d mysql
+	docker run ${MYSQL_OPTS} -d mysql:5
 	sleep 15
 	docker stop mysql && docker rm mysql
 	touch mysql_data 2> /dev/null || echo "MySQL DATABASE PREPARED"
@@ -153,8 +146,7 @@ check_ip:
 	test ${IP} || { echo "ERROR: Could not obtain an IP address of the machine. Please, update the IP variable in the Makefile manually."; exit 1; }
 
 run: check_ip mysql_data
-	@echo docker run ${MYSQL_OPTS} -d mysql
-	docker run ${MYSQL_OPTS} -d mysql
+	docker run ${MYSQL_OPTS} -d mysql:5
 	docker run ${WEB_OPTS} -d ufaldsg/cloud-asr-web
 	docker run ${API_OPTS} -d ufaldsg/cloud-asr-api
 	docker run ${WORKER_OPTS} -d ufaldsg/cloud-asr-worker
@@ -164,14 +156,6 @@ run: check_ip mysql_data
 
 run_locally: check_ip mysql_data
 	bash <( python ${CURDIR}/deployment/run_locally.py ${IP} ${CURDIR}/cloudasr.json )
-run_mysql:
-	docker run ${MYSQL_OPTS} -d mysql
-run_api2:
-	docker run ${API_OPTS} -d ufaldsg/cloud-asr-api
-run_worker2:
-	docker run ${WORKER_OPTS} -d ufaldsg/cloud-asr-worker
-run_master2:
-	docker run ${MASTER_OPTS} -d ufaldsg/cloud-asr-master
 
 stop_locally:
 	docker ps -a | \
@@ -218,7 +202,7 @@ integration-test:
 	docker run ${MASTER_VOLUMES} --rm ufaldsg/cloud-asr-master python2.7 -m nose /opt/app/test_factory.py
 	docker run ${MONITOR_VOLUMES} --rm ufaldsg/cloud-asr-monitor python2.7 -m nose /opt/app/test_factory.py
 	docker run ${RECORDINGS_VOLUMES} --rm ufaldsg/cloud-asr-recordings python2.7 -m nose /opt/app/test_factory.py
-	docker run ${WORKER_VOLUMES} --rm ufaldsg/cloud-asr-worker python2.7 -m nose /opt/app/test_factory.py /opt/app/vad/test.py
+	docker run ${WORKER_VOLUMES} --rm ufaldsg/cloud-asr-worker python2.7 -m nose /opt/app/test_factory.py /opt/app/test_vad.py
 
 test:
 	python2.7 -m nose tests/
