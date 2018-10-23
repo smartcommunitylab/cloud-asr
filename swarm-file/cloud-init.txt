@@ -11,4 +11,4 @@ runcmd:
   - sudo apt update
   - sudo apt install -y docker-ce
   - sudo usermod -aG docker dev
-  - sudo docker swarm join --token SWMTKN-1-1smx3pszua07zgnhxl6vy5wp0uxluk7phunfnhg8k97x9y3hap-15pdskwvn1avdl8ah4xed0c3f 10.0.0.4:2377
+  - sudo docker swarm join --token {token} {ip}
