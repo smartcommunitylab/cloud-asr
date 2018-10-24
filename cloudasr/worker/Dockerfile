@@ -1,4 +1,4 @@
-FROM smartcommunitylab/cloud-asr-base
+FROM smartcommunitylab/cloud-asr-base as builder
 MAINTAINER Ondrej Klejch
 
 RUN apt-get update && \
@@ -14,7 +14,10 @@ RUN git clone https://github.com/choko/alex-asr.git && \
     make && \
     python setup.py install
 
+FROM smartcommunitylab/cloud-asr-base 
+
 WORKDIR /opt/app/
+COPY --from=builder /opt/app .
 ADD . /opt/app
 
 ARG MODEL_URL
