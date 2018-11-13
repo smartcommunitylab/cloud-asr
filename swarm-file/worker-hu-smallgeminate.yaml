@@ -16,7 +16,7 @@ services:
     entrypoint: 
       - /opt/app/init.sh
     labels:
-      size: "Standard_B2ms"
+      size: "Standard_B2s"
     deploy:
       placement:
         constraints: [node.labels.model == hu-smallgeminate]
