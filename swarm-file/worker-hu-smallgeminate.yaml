@@ -1,0 +1,27 @@
+version: '3.7'
+networks:
+  asr-manager_clasr-net:
+    external: true
+
+services:
+  worker:
+    image: smartcommunitylab/cloud-asr-worker-hu-smallgeminate:latest
+    ports:
+      - 5678
+    environment:
+      - MASTER_ADDR=tcp://master:5678
+      - RECORDINGS_SAVER_ADDR=tcp://recordings:5682
+      - MODEL=it-small
+      - PORT0=5678
+    entrypoint: 
+      - /opt/app/init.sh
+    labels:
+      size: "Standard_B2ms"
+    deploy:
+      placement:
+        constraints: [node.labels.model == hu-smallgeminate]
+      mode: replicated
+      replicas: 1
+    networks:
+      - asr-manager_clasr-net
+
