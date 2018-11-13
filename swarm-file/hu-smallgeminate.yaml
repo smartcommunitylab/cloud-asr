@@ -11,7 +11,7 @@ services:
     environment:
       - MASTER_ADDR=tcp://master:5678
       - RECORDINGS_SAVER_ADDR=tcp://recordings:5682
-      - MODEL=it-small
+      - MODEL=hu-smallgeminate
       - PORT0=5678
     entrypoint: 
       - /opt/app/init.sh
