@@ -11,7 +11,7 @@ secrets:
     connection_string:
         external: true
 
-services:
+services:    
     mysql:
         image: mysql:5.7.19
         ports:
@@ -92,34 +92,24 @@ services:
         deploy:
             placement:
                 constraints: [node.labels.task == manager]
-            resources:
-                limits:
-                    memory: 256M
-                    cpus: '0.25'
-                reservations:
-                    memory: 128M
         secrets:
             - connection_string
         networks:
             - clasr-net
     api:
-        image: smartcommunitylab/cloud-asr-api:secret
-        ports:
-            - 80 #api_host_port
+        image: smartcommunitylab/cloud-asr-api2
         depends_on:
              - mysql
         environment:
             - MASTER_ADDR=tcp://master:5679
             - CONNECTION_STRING_FILE=/run/secrets/connection_string            
+            - kafka_broker_url=kafka:9092
         deploy:
             placement:
                 constraints: [node.labels.task == manager]
-            resources:
-                limits:
-                    memory: 256M
-                    cpus: '0.25'
-                reservations:
-                    memory: 128M
+            mode: replicated
+            replicas: 2
+            endpoint_mode: dnsrr
         secrets:
             - connection_string
         networks:
@@ -132,7 +122,7 @@ services:
             - mysql
         environment:
             - CONNECTION_STRING_FILE=/run/secrets/connection_string 
-            - API_URL=https://cloudasr.smartcommunitylab.it:8000
+            - API_URL=https://cloudasrtest.westeurope.cloudapp.azure.com:8000
             - MASTER_ADDR=tcp://master:5678
             - RECORDINGS_SAVER_ADDR=tcp://recordings:5682
             - GOOGLE_LOGIN_CLIENT_ID=""
@@ -142,13 +132,54 @@ services:
         deploy:
             placement:
                 constraints: [node.labels.task == manager]
-            resources:
-                limits:
-                    memory: 256M
-                    cpus: '0.25'
-                reservations:
-                    memory: 128M
         secrets:
             - connection_string
         networks:
             - clasr-net
+    zookeeper:
+        image: wurstmeister/zookeeper
+        ports:
+          - "2181:2181"
+        deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+        networks:
+            - clasr-net
+    kafka:
+        image: wurstmeister/kafka:latest
+        ports:
+            - target: 9092
+              published: 9092
+              protocol: tcp
+              mode: host
+        deploy:
+            placement:
+                constraints: [node.labels.task == manager]
+        environment:
+            KAFKA_ADVERTISED_HOST_NAME: kafka  
+            KAFKA_ADVERTISED_PORT: "9092"
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_CREATE_TOPICS: "en-towninfo:5:1,en-voxforge:5:1,resulten-towninfo:1:1,resulten-voxforge:1:1"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - clasr-net
+    worker1:
+        image: smartcommunitylab/cloud-asr-worker-en-towninfo2
+        ports:
+            - 5678
+        environment:
+            - MASTER_ADDR=tcp://master:5678
+            - RECORDINGS_SAVER_ADDR=tcp://recordings:5682
+            - MODEL=en-towninfo
+            - PORT0=5678
+            - kafka_broker_url=kafka:9092
+        deploy:
+            placement:
+                constraints: [node.labels.task == worker1]
+            mode: replicated
+            replicas: 1
+        networks:
+            - clasr-net
+
+
