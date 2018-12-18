@@ -7,17 +7,14 @@
     "marathon_password": "MARATHON_PASSWORD",
     "master_ip": "127.0.0.1",
     "connection_string": "<mysql connection string>?charset=utf8",
+    "kafka_broker_url":"172.17.0.1:9092",
     "google_login_client_id": "<google login client id>",
     "google_login_client_secret": "<google login client secret>",
     "ga_tracking_id": "",
     "workers": [
-        {"image": "ufaldsg/cloud-asr-worker-en-wiki", "model": "en-wiki", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-en-voxforge", "model": "en-voxforge", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-en-towninfo", "model": "en-towninfo", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-cs", "model": "cs", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-cs-alex", "model": "cs-alex", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-downloader", "model": "kams-en-hifi", "instances": 1, "env": {
-            "MODEL_URL": "https://vystadial.ms.mff.cuni.cz/download/kams/tri5_nnet2_smbr_ivector_online.zip"
-        }}
+
+ {"image": "smartcommunitylab/cloud-asr-worker-en-towninfo2", "model": "en-towninfo", "instances": 1}
+
     ]
+
 }

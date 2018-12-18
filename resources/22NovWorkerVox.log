@@ -1,0 +1,30 @@
+Inside Create Worker
+('Model is ', 'en-voxforge')
+(' The current request id is', None)
+('Message goes to partition', 0, "6096' [GET]>")
+Inside worker online request
+In worker from request body resampled pcm is 
+('New LM in worker is', u'')
+Creating hypothesis
+[48767, 48407, 45097, 34807, 31194, 45230, 2944, 42255]
+[48767, 48407, 45097, 34807, 31194, 45230, 2944, 42255]
+[48767, 48407, 45097, 34807, 31194, 9135, 42255]
+('Hypothesis is ', [(0.507567778219445, u'WHAT WAS TO PRESIDENT OF TONIGHT AT STATES'), (0.4924322155014937, u'WHAT WAS TO PRESIDENT OF CONNECTED STATES')])
+('Final Hypotheses is ', [(142916432064439525301547548173475596898L, True, [(0.507567778219445, u'WHAT WAS TO PRESIDENT OF TONIGHT AT STATES'), (0.4924322155014937, u'WHAT WAS TO PRESIDENT OF CONNECTED STATES')])])
+Exiting online worker recognition and sending hpothesis
+6096' [GET]> [(142916432064439525301547548173475596898L, True, [(0.507567778219445, u'WHAT WAS TO PRESIDENT OF TONIGHT AT STATES'), (0.4924322155014937, u'WHAT WAS TO PRESIDENT OF CONNECTED STATES')])]
+Sending hypothesis
+(' The current request id is', <cloudasr.shared.cloudasr.messages.messages_pb2.UniqueID object at 0x7f00b1432938>)
+('Message goes to partition', 0, "6826' [GET]>")
+Inside worker online request
+In worker from request body resampled pcm is 
+('New LM in worker is', u'')
+Creating hypothesis
+[44704, 22580, 1, 42969, 46692, 42255]
+[44704, 22580, 1, 42969, 46692, 42255]
+('Hypothesis is ', [(1.0, u'THIS IS A SUDDEN UNITED STATES')])
+('Final Hypotheses is ', [(142916432064439525301547548173475596898L, True, [(1.0, u'THIS IS A SUDDEN UNITED STATES')])])
+Exiting online worker recognition and sending hpothesis
+6096' [GET]> [(142916432064439525301547548173475596898L, True, [(0.507567778219445, u'WHAT WAS TO PRESIDENT OF TONIGHT AT STATES'), (0.4924322155014937, u'WHAT WAS TO PRESIDENT OF CONNECTED STATES')])]
+6826' [GET]> [(142916432064439525301547548173475596898L, True, [(1.0, u'THIS IS A SUDDEN UNITED STATES')])]
+Sending hypothesis

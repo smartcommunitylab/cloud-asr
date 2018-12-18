@@ -98,13 +98,13 @@ RECORDINGS_OPTS=--name recordings \
 	${RECORDINGS_VOLUMES}
 
 build:
-	docker build -t ufaldsg/cloud-asr-base cloudasr/shared
-	docker build -t ufaldsg/cloud-asr-web cloudasr/web
-	docker build -t ufaldsg/cloud-asr-api cloudasr/api/
+	#docker build -t ufaldsg/cloud-asr-base cloudasr/shared
+	#docker build -t ufaldsg/cloud-asr-web cloudasr/web
+	#docker build -t ufaldsg/cloud-asr-api cloudasr/api/
 	docker build -t ufaldsg/cloud-asr-worker --build-arg MODEL_URL="${MODEL_URL}" cloudasr/worker/
-	docker build -t ufaldsg/cloud-asr-master cloudasr/master/
-	docker build -t ufaldsg/cloud-asr-monitor cloudasr/monitor/
-	docker build -t ufaldsg/cloud-asr-recordings cloudasr/recordings/
+	#docker build -t ufaldsg/cloud-asr-master cloudasr/master/
+	#docker build -t ufaldsg/cloud-asr-monitor cloudasr/monitor/
+	#docker build -t ufaldsg/cloud-asr-recordings cloudasr/recordings/
 
 build_local:
 	cp -r cloudasr/shared/cloudasr cloudasr/api/cloudasr
@@ -205,7 +205,7 @@ integration-test:
 	docker run ${WORKER_VOLUMES} --rm ufaldsg/cloud-asr-worker python2.7 -m nose /opt/app/test_factory.py /opt/app/test_vad.py
 
 test:
-	python2.7 -m nose tests/
+	python2.7 -m nose tests/test_online_recognition.py
 
 compile-messages:
 	protoc --python_out=. ./cloudasr/shared/cloudasr/messages/messages.proto
