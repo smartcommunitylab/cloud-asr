@@ -5,11 +5,14 @@ from flask.ext.googlelogin import GoogleLogin
 from flask.ext.principal import Principal, Permission, RoleNeed, UserNeed, AnonymousIdentity, Identity, identity_loaded, identity_changed
 from flask.ext.sqlalchemy import SQLAlchemy
 from lib import run_worker_on_marathon
+from flask_cors import CORS, cross_origin
 from cloudasr.schema import db
 from cloudasr.models import UsersModel, RecordingsModel, WorkerTypesModel
 
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/demo": {"origins": "*"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 if 'CONNECTION_STRING' in os.environ:
     app.config.update(
@@ -52,6 +55,7 @@ def index():
 
 @app.route('/demo')
 @app.route('/demo/<model>')
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def demo(model=None):
     return render_template('demo.html', api_url = os.environ['API_URL'], model = model)
 
