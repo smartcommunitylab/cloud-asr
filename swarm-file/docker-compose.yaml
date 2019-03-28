@@ -11,7 +11,7 @@ secrets:
     connection_string:
         external: true
 
-services:    
+services:
     mysql:
         image: mysql:5.7.19
         ports:
@@ -79,13 +79,13 @@ services:
     recordings:
         image: smartcommunitylab/cloud-asr-recordings:secret
         ports:
-            - 80 #recordings_host_port    
+            - 80 #recordings_host_port
             - 5682:5682 #recordings_saver_port
         volumes:
             - ../recordings:/opt/app/static/data
         depends_on:
-            - mysql        
-        environment:            
+            - mysql
+        environment:
             - CONNECTION_STRING_FILE=/run/secrets/connection_string
             - STORAGE_PATH=/opt/app/static/data
             - DOMAIN=https://cloudasr.smartcommunitylab.it:8002
@@ -102,7 +102,7 @@ services:
              - mysql
         environment:
             - MASTER_ADDR=tcp://master:5679
-            - CONNECTION_STRING_FILE=/run/secrets/connection_string            
+            - CONNECTION_STRING_FILE=/run/secrets/connection_string
             - kafka_broker_url=kafka:9092
         deploy:
             placement:
@@ -121,7 +121,7 @@ services:
         depends_on:
             - mysql
         environment:
-            - CONNECTION_STRING_FILE=/run/secrets/connection_string 
+            - CONNECTION_STRING_FILE=/run/secrets/connection_string
             - API_URL=https://cloudasrtest.westeurope.cloudapp.azure.com:8000
             - MASTER_ADDR=tcp://master:5678
             - RECORDINGS_SAVER_ADDR=tcp://recordings:5682
@@ -156,7 +156,7 @@ services:
             placement:
                 constraints: [node.labels.task == manager]
         environment:
-            KAFKA_ADVERTISED_HOST_NAME: kafka  
+            KAFKA_ADVERTISED_HOST_NAME: kafka
             KAFKA_ADVERTISED_PORT: "9092"
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
             KAFKA_CREATE_TOPICS: "en-towninfo:5:1,en-voxforge:5:1,resulten-towninfo:1:1,resulten-voxforge:1:1"
@@ -176,10 +176,8 @@ services:
             - kafka_broker_url=kafka:9092
         deploy:
             placement:
-                constraints: [node.labels.task == worker1]
+                constraints: [node.labels.task == manager]
             mode: replicated
             replicas: 1
         networks:
             - clasr-net
-
-
