@@ -11,7 +11,7 @@ import pickle
 import collections
 from kafka.errors import KafkaError
 from kafka.structs import OffsetAndMetadata, TopicPartition
-
+import time
 
 
 def create_frontend_worker(kafka_broker_url):
@@ -123,25 +123,48 @@ class FrontendWorker:
 
     def read_response_from_worker(self, keyList, requestKey):
 
+        start = time.time()
         print(" Model of the returned worker is ", self.model)
         strkey = str(requestKey)
         key = strkey[-12:]
         try:
+            start1 = time.time()
             results = KafkaConsumer(bootstrap_servers=self.kafka_broker_url,
                                      enable_auto_commit=False,auto_offset_reset="latest",group_id='',consumer_timeout_ms=2500)
             tp = TopicPartition('result'+str(self.model), 0)
             results.assign([tp])
             #results.subscribe(['result' + str(self.model)])
+            end1 = time.time()
+            print("Time taken to read response from kafka is %d ms" % ((end1 - start1) * 1000), key)
         except KafkaError:
             print("Kafka error while reading response from worker", key)
+        start2 = time.time()
+        resultCount = 0
         if results is not None:
+            start4 = time.time()
             for result in results:
+                resultCount = resultCount + 1
                 print("Result Keys inside Kafka to be read are " ,result.key)
+                end4 = time.time()
+                print("Time taken to iterate consumer from kafka is %d ms" % ((end4 - start4) * 1000), key, result.key)
                 print("Total results returned from kafka is ", resultCount, key, result.key)
                 if key == result.key:
+                    #key = list(keyList)[list(keyList).index(result.key)]
+                    #apiCollection = pickle.loads((result.value))
+                    #response = createResultsMessage(apiCollection[key])
                     response = parseResultsMessage(result.value)
+                    print("Inside fetching topic partition")
+                    print("result topic is ",result.topic)
+                    print("result partition is ", result.partition)
                     offsets = {tp: OffsetAndMetadata(result.offset+1, None)}
+                    print("doing manual commit for request" ,key)
                     results.commit(offsets=offsets)
+                    end2 = time.time()
+                    end = time.time()
+                    print("Time taken to create results message after reading from kafka in %d ms" % (
+                            (end2 - start2) * 1000), key, result.key)
+                    print("Overall Time taken to read response from worker in %d ms" % ((end - start) * 1000), key,
+                          result.key)
                     return response
 
     def format_batch_recognition_response(self, response):
@@ -170,6 +193,7 @@ class FrontendWorker:
         }
 
     def prepare_vad_buffer(self, keyList, request, requestKey, eventType, frame_rate):
+        start = time.time()
         strkey = str(requestKey)
         Key = strkey[-12:]
         d = keyList
@@ -195,9 +219,13 @@ class FrontendWorker:
                 print("Non Speech Detected for key", Key)
                 self.silenceDetected = True
                 return resampledpcm_buffer, self.silenceDetected
+        end = time.time()
+        print("Time taken to prepare VAD Buffer in %d ms" % ((end - start) * 1000), Key)
+        # print("Exiting Creating VAD Buffer")
         return resampledpcm_buffer_map, self.silenceDetected
 
     def invoke_worker_with_vad_data(self, request, requestKey, frame_rate=None):
+        start = time.time()
         strkey = str(requestKey)
         key = strkey[-12:]
         print("Sending VAD Data with Key to worker ", key)
@@ -205,6 +233,8 @@ class FrontendWorker:
         producer = KafkaProducer(bootstrap_servers=self.kafka_broker_url)
         try:
             producer.send(str(self.model), key=key, value=reSampledrequest.SerializeToString()).get(timeout=2)
+            end = time.time()
+            print("Time taken to send VAD Buffer in %d ms" % ((end - start) * 1000), key)
         except KafkaError:
             producer.close()
             print("Kafka Error when sending to worker for the request", key)

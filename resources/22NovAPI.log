@@ -1,0 +1,542 @@
+/usr/local/lib/python2.7/dist-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+/usr/local/lib/python2.7/dist-packages/flask_sqlalchemy/__init__.py:800: UserWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.
+  warnings.warn('SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True to suppress this warning.')
+INSIDE BEGIN ONLINE RECOGNITION RUN.PY
+('User id is ', <Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>)
+Worker Model that will be used is
+('Worker model that will be used is ', u'en-towninfo')
+INSIDE CREATE FRONTEND WORKER
+('Worker Model that will be used  name is', u'en-towninfo')
+('Value of LM is ', 'None')
+('Key gathered in change_LM is ', "7344' [GET]>")
+Sending request to change LM
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 1)
+Create a new buffer and map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 1)
+Create a new buffer and map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 1)
+Create a new buffer and map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 1)
+Create a new buffer and map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+INSIDE BEGIN ONLINE RECOGNITION RUN.PY
+('User id is ', <Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>)
+Worker Model that will be used is
+('Worker model that will be used is ', u'en-voxforge')
+INSIDE CREATE FRONTEND WORKER
+('Worker Model that will be used  name is', u'en-voxforge')
+('Value of LM is ', 'None')
+('Key gathered in change_LM is ', "6826' [GET]>")
+Sending request to change LM
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Create a new buffer and map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Create a new buffer and map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Create a new buffer and map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Create a new buffer and map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Non Speech Detected
+Created vad_buffer_map
+Inside Creating VAD Buffer
+('Len of list is', 2)
+INVOKING VAD SYSTEM IN API
+('Key is ', "7344' [GET]>")
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Non Speech Detected
+Created vad_buffer_map
+Inside Creating VAD Buffer
+('Len of list is', 2)
+INVOKING VAD SYSTEM IN API
+('Key is ', "6826' [GET]>")
+Sending pcmList
+sending resampledList
+Sending pcmList
+sending resampledList
+('Pickled Results look like ', <kafka.consumer.group.KafkaConsumer object at 0x7f30077ecfd0>)
+('Pickled Results look like ', <kafka.consumer.group.KafkaConsumer object at 0x7f3006754ad0>)
+INSIDE READING RESPONSE FROM WORKER
+('Key coming from worker end is ', "7344' [GET]>")
+('Key at api end is', "7344' [GET]>")
+('Results object  are ', OrderedDict([("5161' [GET]>", [(14557984730476607893920884377509026416L, True, [(0.8581251592734882, u'MODEST FINISH IT IN TO KNOW IT A CHEAP'), (0.14187483566478776, u'MODEST FINISH IT AND TO KNOW IT A CHEAP')])]), ("7344' [GET]>", [(14557984730476607893920884377509026416L, True, [(0.24360519284817772, u'YES TO KNOW IT IN THE CITY TO'), (0.16644909424843252, u'YES TO ENTER FINISH AN'), (0.08255936191139265, u'YES TO KNOW IN THE CITY TO'), (0.07480500467928375, u'YES TO KNOW IT IN THE CITY'), (0.07068576928377288, u'YES TO FINISH AN'), (0.06543751467026232, u'YES TO KNOW FINISH AN'), (0.056081101410534406, u'YES AND TO FINISH AN'), (0.0434632637596465, u'YES TO ENTER FINISH AND IT TO'), (0.03582180066603425, u'YES TO TO KNOW IT IN THE CITY TO'), (0.03561252420946486, u'YES TO ENTER IN THE CITY TO')])])]))
+('request key is ', "7344' [GET]>")
+('Value retrived from collection is ', [(14557984730476607893920884377509026416L, True, [(0.24360519284817772, u'YES TO KNOW IT IN THE CITY TO'), (0.16644909424843252, u'YES TO ENTER FINISH AN'), (0.08255936191139265, u'YES TO KNOW IN THE CITY TO'), (0.07480500467928375, u'YES TO KNOW IT IN THE CITY'), (0.07068576928377288, u'YES TO FINISH AN'), (0.06543751467026232, u'YES TO KNOW FINISH AN'), (0.056081101410534406, u'YES AND TO FINISH AN'), (0.0434632637596465, u'YES TO ENTER FINISH AND IT TO'), (0.03582180066603425, u'YES TO TO KNOW IT IN THE CITY TO'), (0.03561252420946486, u'YES TO ENTER IN THE CITY TO')])])
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+INSIDE READING RESPONSE FROM WORKER
+('Key coming from worker end is ', "7344' [GET]>")
+('Key at api end is', "7344' [GET]>")
+('Results object  are ', OrderedDict([("5161' [GET]>", [(14557984730476607893920884377509026416L, True, [(0.8581251592734882, u'MODEST FINISH IT IN TO KNOW IT A CHEAP'), (0.14187483566478776, u'MODEST FINISH IT AND TO KNOW IT A CHEAP')])]), ("7344' [GET]>", [(14557984730476607893920884377509026416L, True, [(0.24360519284817772, u'YES TO KNOW IT IN THE CITY TO'), (0.16644909424843252, u'YES TO ENTER FINISH AN'), (0.08255936191139265, u'YES TO KNOW IN THE CITY TO'), (0.07480500467928375, u'YES TO KNOW IT IN THE CITY'), (0.07068576928377288, u'YES TO FINISH AN'), (0.06543751467026232, u'YES TO KNOW FINISH AN'), (0.056081101410534406, u'YES AND TO FINISH AN'), (0.0434632637596465, u'YES TO ENTER FINISH AND IT TO'), (0.03582180066603425, u'YES TO TO KNOW IT IN THE CITY TO'), (0.03561252420946486, u'YES TO ENTER IN THE CITY TO')])])]))
+('request key is ', "7344' [GET]>")
+('Value retrived from collection is ', [(14557984730476607893920884377509026416L, True, [(0.24360519284817772, u'YES TO KNOW IT IN THE CITY TO'), (0.16644909424843252, u'YES TO ENTER FINISH AN'), (0.08255936191139265, u'YES TO KNOW IN THE CITY TO'), (0.07480500467928375, u'YES TO KNOW IT IN THE CITY'), (0.07068576928377288, u'YES TO FINISH AN'), (0.06543751467026232, u'YES TO KNOW FINISH AN'), (0.056081101410534406, u'YES AND TO FINISH AN'), (0.0434632637596465, u'YES TO ENTER FINISH AND IT TO'), (0.03582180066603425, u'YES TO TO KNOW IT IN THE CITY TO'), (0.03561252420946486, u'YES TO ENTER IN THE CITY TO')])])
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '115568376826')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 171947637621382573847694645548536967796L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/115568376826' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "6826' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+INSIDE END RECOGNITION
+DELETING WORKER SESSION
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+('Socket id gathered is ', '487450747344')
+INSIDE RECOGNIZE CHUNK RUN.PY
+('Message frame rate is ', 44100)
+Inside API LIB recognize chunk
+('Total chunks of the speech are', 1)
+Now starting to create  vad buffer
+('Request id is ', 113965800397318875481685687251101660595L)
+('Request Key is ', "<Request 'http://172.17.0.1:8000/socket.io/1/websocket/487450747344' [GET]>")
+Inside Creating VAD Buffer
+('Len of list is', 2)
+Entry exists for the socket key in map
+('Key is ', "7344' [GET]>")
+Exiting Creating VAD Buffer
+Created vad_buffer_map
+INSIDE END RECOGNITION
+DELETING WORKER SESSION

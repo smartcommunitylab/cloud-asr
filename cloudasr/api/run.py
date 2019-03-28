@@ -7,7 +7,6 @@ from lib import create_frontend_worker, MissingHeaderError, NoWorkerAvailableErr
 from cloudasr.schema import db
 from cloudasr.models import UsersModel, RecordingsModel, WorkerTypesModel
 
-
 app = Flask(__name__)
 if 'CONNECTION_STRING' in os.environ:
     app.config.update(
@@ -25,13 +24,13 @@ elif 'CONNECTION_STRING_FILE' in os.environ:
     )
     fl.close()
 else:
-    print "No connection string set in environ"
-
+    print("No connection string set in environ")
 cors = CORS(app)
 socketio = SocketIO(app)
 db.init_app(app)
 worker_types_model = WorkerTypesModel(db.session)
 recordings_model = RecordingsModel(db.session, worker_types_model)
+keyList = set([])
 
 @app.route("/recognize", methods=['POST'])
 def recognize_batch():
@@ -46,17 +45,15 @@ def recognize_batch():
             yield json.dumps(result)
 
     try:
-        worker = create_frontend_worker(os.environ['MASTER_ADDR'])
-        response = worker.recognize_batch(data, request.headers)
-        worker.close()
+        #os.environ['kafka_broker_url']="172.17.0.1:9092"
+        worker = create_frontend_worker(os.environ['kafka_broker_url'])
+        response = worker.recognize_batch(data, request.headers,request)
 
         return Response(stream_with_context(generate(response)))
     except MissingHeaderError:
         return jsonify({"status": "error", "message": "Missing header Content-Type"}), 400
-    except NoWorkerAvailableError:
+    except Exception as exception:
         return jsonify({"status": "error", "message": "No worker available"}), 503
-    finally:
-        worker.close()
 
 
 @app.route("/transcribe", methods=['POST'])
@@ -75,17 +72,22 @@ def transcribe():
     except KeyError as e:
         return jsonify({"status": "error", "message": "Missing item %s" % e.args[0]}), 400
 
+
 @socketio.on('begin')
 def begin_online_recognition(message):
     try:
-        worker = create_frontend_worker(os.environ['MASTER_ADDR'])
+        print("**************INSIDE BEGIN ONLINE RECOGNITION RUN.PY for request****************", request)
+        print("Worker model that will be used is ", message["model"])
+        #os.environ['kafka_broker_url']="172.17.0.1:9092"
+        #kafka_broker_url=os.environ['kafka_broker_url']
+        worker = create_frontend_worker(os.environ['kafka_broker_url'])
         worker.connect_to_worker(message["model"])
-
-        session["worker"] = worker
         session["connected"] = True
-    except NoWorkerAvailableError:
-        emit('server_error', {"status": "error", "message": "No worker available"})
-        worker.close()
+        session["worker"] = worker
+    except Exception as exception:
+        emit('server_error', {"status": "error", "message": "Internal Error"})
+        print(exception)
+
 
 @socketio.on('chunk')
 def recognize_chunk(message):
@@ -93,14 +95,22 @@ def recognize_chunk(message):
         if not session.get("connected", False):
             emit('server_error', {"status": "error", "message": "No worker available"})
             return
-
-        results = session["worker"].recognize_chunk(message["chunk"], message["frame_rate"])
-        for result in results:
-            emit('result', result)
-    except WorkerInternalError:
+        eventType = "chunk"
+        chunk, frame_rate = session["worker"].recognize_chunk(message["chunk"], message["frame_rate"])
+        bufferMap, silenceDetected = session["worker"].send_request_to_vad_system(keyList, request, chunk, "ONLINE",
+                                                                                  eventType, frame_rate, has_next=True)
+        if silenceDetected:
+            eventType = "End"
+            results = session["worker"].end_recognition(keyList, request, eventType, 16000)
+            if results is not None:
+                for result in results:
+                    emit('result', result)
+                    print("*****************Finishing recognition for request*******************", request)
+    except Exception as exception:
         emit('server_error', {"status": "error", "message": "Internal error"})
-        session["worker"].close()
+        print(exception)
         del session["worker"]
+
 
 @socketio.on('change_lm')
 def change_lm(message):
@@ -109,29 +119,18 @@ def change_lm(message):
             emit('server_error', {"status": "error", "message": "No worker available"})
             return
 
-        results = session["worker"].change_lm(str(message["new_lm"]))
-        for result in results:
-            emit('result', result)
-    except WorkerInternalError:
+        session["worker"].change_lm(request, keyList, str(message["new_lm"]))
+    except Exception as exception:
         emit('server_error', {"status": "error", "message": "Internal error"})
-        session["worker"].close()
         del session["worker"]
+        print(exception)
+
 
 @socketio.on('end')
 def end_recognition(message):
-    if not session.get("connected", False):
-        emit('server_error', {"status": "error", "message": "No worker available"})
-        return
-
-    results = session["worker"].end_recognition()
-    for result in results:
-        emit('result', result)
-
-    emit('end', results[-1])
-
-    session["worker"].close()
     session["connected"] = False
     del session["worker"]
+
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=80)

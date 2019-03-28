@@ -6,35 +6,25 @@ import time
 import uuid
 from StringIO import StringIO
 from asr import create_asr
-from vad import create_vad
 from cloudasr.messages import RecognitionRequestMessage
 from cloudasr.messages.helpers import *
+from kafka import KafkaConsumer
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
+import collections
 
 
-def create_worker(model, hostname, port, master_address, recordings_saver_address):
-    poller = create_poller("tcp://0.0.0.0:5678")
-    heartbeat = create_heartbeat(model, "tcp://%s:%s" % (hostname, port), master_address)
+
+def create_worker(model, recordings_saver_address, kafka_broker_url):
     asr = create_asr()
-    audio = AudioUtils(asr.get_sample_rate())
-    vad = create_vad(asr.get_sample_rate())
+    audio = AudioUtils()
+    orderedHypothesis = collections.OrderedDict()
     saver = RemoteSaver(create_recordings_saver_socket(recordings_saver_address), model)
     id_generator = lambda: uuid.uuid4().int
     run_forever = lambda: True
 
-    return Worker(poller, heartbeat, asr, audio, saver, vad, id_generator, run_forever)
+    return Worker(asr, audio, orderedHypothesis, saver, model, id_generator, run_forever, kafka_broker_url)
 
-def create_poller(frontend_address):
-    from cloudasr import Poller
-    context = zmq.Context()
-    frontend_socket = context.socket(zmq.REP)
-    frontend_socket.bind(frontend_address)
-
-    sockets = {
-        "frontend": {"socket": frontend_socket, "receive": frontend_socket.recv, "send": frontend_socket.send},
-    }
-    time_func = time.time
-
-    return Poller(sockets, time_func)
 
 def create_recordings_saver_socket(address):
     context = zmq.Context()
@@ -43,64 +33,49 @@ def create_recordings_saver_socket(address):
 
     return socket
 
-def create_heartbeat(model, address, master_address):
-    context = zmq.Context()
-    master_socket = context.socket(zmq.PUSH)
-    master_socket.connect(master_address)
-
-    return Heartbeat(model, address, master_socket)
-
 
 class Worker:
 
-    def __init__(self, poller, heartbeat, asr, audio, saver, vad, id_generator, should_continue):
-        self.poller = poller
-        self.heartbeat = heartbeat
+    def __init__(self, asr, audio, orderedHypothesis, saver, model, id_generator, should_continue, kafka_broker_url):
         self.asr = asr
         self.audio = audio
         self.saver = saver
-        self.vad = vad
+        self.model = model
         self.should_continue = should_continue
         self.id_generator = id_generator
         self.current_request_id = None
         self.current_chunk_id = None
+        self.orderedHypothesis = orderedHypothesis
+        self.kafka_broker_url = kafka_broker_url
 
     def run(self):
-        self.heartbeat.send("STARTED")
 
         while self.should_continue():
-            messages, time = self.poller.poll(1000)
-
-            if "frontend" in messages:
-                self.handle_request(messages["frontend"])
+            print("Model is ", str(self.model))
+            resampledConsumed = KafkaConsumer(str(self.model), group_id='worker' + str(self.model),
+                                              bootstrap_servers=self.kafka_broker_url,
+                                              auto_commit_interval_ms=5000,
+                                              enable_auto_commit=True)
+            if resampledConsumed is not None:
+                self.handle_request(resampledConsumed)
             else:
                 if not self.is_online_recognition_running():
-                    self.heartbeat.send("WAITING")
+                    print("Worker is Ready")
                 else:
                     self.end_recognition()
-                    self.heartbeat.send("FINISHED")
 
     def handle_request(self, message):
-        request = parseRecognitionRequestMessage(message)
-
-        if request.type == RecognitionRequestMessage.BATCH:
-            self.handle_batch_request(request)
-        else:
-            if not self.is_online_recognition_running():
-                self.begin_online_recognition(request)
-
-            if self.is_bad_chunk(request):
-                return self.handle_bad_chunk()
-
-            self.handle_online_request(request)
-
-            if request.has_next:
-                self.heartbeat.send("WORKING")
+        for mssg in message:
+            request = parseRecognitionRequestMessage(mssg.value)
+            if request.type == RecognitionRequestMessage.BATCH:
+                self.handle_batch_request(request, mssg.key)
             else:
-                self.end_recognition()
-                self.heartbeat.send("FINISHED")
+                if not self.is_online_recognition_running():
+                    self.begin_online_recognition(request)
 
-    def handle_batch_request(self, request):
+                self.handle_online_request(request, mssg.key)
+
+    def handle_batch_request(self, request, msgKey):
         pcm = self.get_pcm_from_message(request.body)
         resampled_pcm = self.audio.resample_to_default_sample_rate(pcm, request.frame_rate)
 
@@ -108,59 +83,41 @@ class Worker:
         self.asr.recognize_chunk(resampled_pcm)
         current_chunk_id = self.id_generator()
         final_hypothesis = self.asr.get_final_hypothesis()
-        self.send_hypotheses([(current_chunk_id, True, final_hypothesis)])
+        hypotheses = []
+        hypotheses.append((current_chunk_id, True, final_hypothesis))
+        self.send_hypotheses(hypotheses, msgKey)
         self.end_recognition()
-
         self.saver.new_recognition(request.id)
         self.saver.add_pcm(pcm)
         self.saver.final_hypothesis(current_chunk_id, final_hypothesis)
-        self.heartbeat.send("FINISHED")
 
-    def handle_online_request(self, request):
+    def handle_online_request(self, request, msgKey):
+        audio_buffer = request.body
         if request.new_lm:
             self.asr.change_lm(request.new_lm)
-
         if request.has_next == False or request.new_lm != "":
             is_final = True
-            hypothesis = self.asr.get_final_hypothesis()
-
+            hypotheses = []
+            if len(audio_buffer) > 0:
+                self.saver.add_pcm(audio_buffer)
+                self.asr.recognize_chunk(audio_buffer)
+                hypothesis = self.asr.get_final_hypothesis()
+                hypotheses.append((self.current_chunk_id, True, hypothesis))
+                self.saver.final_hypothesis(self.current_chunk_id, hypothesis)
+            elif len(hypotheses) == 0:
+                hypotheses.append((self.current_chunk_id, True, [(1.0, "")]))
             self.asr.reset()
-            self.saver.final_hypothesis(self.current_chunk_id, hypothesis)
-            self.send_hypotheses([(self.current_chunk_id, True, hypothesis)])
+            self.send_hypotheses(hypotheses, msgKey)
             return
 
-        hypotheses = []
-        audio_buffer = b""
-        for original_pcm, resampled_pcm in self.audio.chunks(request.body, request.frame_rate):
-            is_speech, change, original_pcm, resampled_pcm = self.vad.decide(original_pcm, resampled_pcm)
-            current_chunk_id = self.current_chunk_id
-
-            if is_speech:
-                audio_buffer += resampled_pcm
-                self.saver.add_pcm(original_pcm)
-
-            if change == "non-speech":
-                self.asr.recognize_chunk(audio_buffer)
-                audio_buffer = b""
-
-                hypothesis = self.asr.get_final_hypothesis()
-
-                self.asr.reset()
-                self.saver.final_hypothesis(current_chunk_id, hypothesis)
-                hypotheses.append((self.current_chunk_id, True, hypothesis))
-                self.current_chunk_id = self.id_generator()
-
-        if len(audio_buffer) > 0:
-            hypothesis = [self.asr.recognize_chunk(audio_buffer)]
-            hypotheses.append((self.current_chunk_id, False, hypothesis))
-        elif len(hypotheses) == 0:
-            hypotheses.append((self.current_chunk_id, False, [(1.0, "")]))
-
-        self.send_hypotheses(hypotheses)
-
-    def send_hypotheses(self, hypotheses):
-        response = createResultsMessage(hypotheses)
-        self.poller.send("frontend", response.SerializeToString())
+    def send_hypotheses(self, hypotheses, messageKey):
+        producer = KafkaProducer(bootstrap_servers=self.kafka_broker_url)
+        try:
+            response = createResultsMessage(hypotheses)
+            producer.send('result' + str(self.model), key=messageKey, value=response.SerializeToString()).get(timeout=3)
+            self.end_recognition()
+        except KafkaError:
+            print("Kafka error while sending the result back to API for request", messageKey)
 
     def is_online_recognition_running(self):
         return self.current_request_id is not None
@@ -176,31 +133,14 @@ class Worker:
     def end_recognition(self):
         self.asr.change_lm("default")
         self.asr.reset()
-        self.vad.reset()
         self.audio.reset()
         self.current_request_id = None
-
-    def handle_bad_chunk(self):
-        self.poller.send("frontend", createErrorResultsMessage().SerializeToString())
 
     def get_pcm_from_message(self, message):
         return self.audio.load_wav_from_string_as_pcm(message)
 
 
-class Heartbeat:
-
-    def __init__(self, model, address, socket):
-        self.model = model
-        self.address = address
-        self.socket = socket
-
-    def send(self, status):
-        heartbeat = createHeartbeatMessage(self.address, self.model, status)
-        self.socket.send(heartbeat.SerializeToString())
-
-
 class AudioUtils:
-
     def __init__(self, sample_rate=16000, sample_width=2, frame_duration_ms=30):
         self.state = None
         self.original_pcm_buffer = b""
@@ -238,25 +178,6 @@ class AudioUtils:
         except EOFError:
             raise Exception('Input PCM is corrupted: End of file.')
 
-    def chunks(self, pcm, sample_rate):
-        if len(pcm) == 0:
-            yield b"", b""
-        else:
-            original_pcm = self.original_pcm_buffer + pcm
-            resampled_pcm = self.resampled_pcm_buffer + self.resample_to_default_sample_rate(pcm, sample_rate)
-            original_buffer_size = int(sample_rate * (self.frame_duration_ms / 1000.) * self.sample_width)
-            resampled_buffer_size = int(self.sample_rate * (self.frame_duration_ms / 1000.) * self.sample_width)
-
-            num_chunks = int(float(len(resampled_pcm)) / resampled_buffer_size)
-            for i in xrange(num_chunks):
-                yield (
-                    original_pcm[i * original_buffer_size:(i + 1) * original_buffer_size],
-                    resampled_pcm[i * resampled_buffer_size:(i + 1) * resampled_buffer_size]
-                )
-
-            self.original_pcm_buffer = original_pcm[num_chunks * original_buffer_size:]
-            self.resampled_pcm_buffer = resampled_pcm[num_chunks * resampled_buffer_size:]
-
     def resample_to_default_sample_rate(self, pcm, sample_rate):
         if sample_rate != self.sample_rate:
             pcm, state = audioop.ratecv(pcm, 2, 1, sample_rate, self.sample_rate, None)
@@ -278,6 +199,7 @@ class RemoteSaver:
         self.wav = b""
 
     def new_recognition(self, id, frame_rate=16000):
+        print("Inside new recognition saver")
         self.id = uniqId2Int(id)
         self.part = 0
         self.frame_rate = frame_rate
@@ -288,7 +210,8 @@ class RemoteSaver:
     def final_hypothesis(self, chunk_id, final_hypothesis):
         if len(self.wav) == 0:
             return
-
-        self.socket.send(createSaverMessage(self.id, self.part, chunk_id, self.model, self.wav, self.frame_rate, final_hypothesis).SerializeToString())
+        print("saving final hypothesis")
+        self.socket.send(createSaverMessage(self.id, self.part, chunk_id, self.model, self.wav, self.frame_rate,
+                                            final_hypothesis).SerializeToString())
         self.wav = b""
         self.part += 1

@@ -68,7 +68,7 @@ def run_api(config):
         "-e CONNECTION_STRING='%s'" % config['connection_string'],
     ]
 
-    run_docker("ufaldsg/cloud-asr-api", config["tag"], opts)
+    run_docker("smartcommunitylab/cloud-asr-api2", "latest", opts)
 
 
 def run_web(config):
@@ -130,7 +130,7 @@ def run_worker(config, worker_config):
             for var in worker_config["env"]:
                 opts.append("-e {var}={val}".format(var=var, val=worker_config["env"][var]))
 
-        run_docker(worker_config["image"], config["tag"], opts)
+        run_docker(worker_config["image"], "latest", opts)
 
 
 if __name__ == "__main__":
@@ -145,12 +145,13 @@ if __name__ == "__main__":
     stop_running_instances(config)
 
     run_mysql(config)
-    run_master(config)
+    #run_master(config)
     run_web(config)
     run_api(config)
-    run_monitor(config)
+    #run_monitor(config)
     run_recordings_saver(config)
 
     for worker_config in config["workers"]:
-        run_worker(config, worker_config)
+         run_worker(config, worker_config)
+
 

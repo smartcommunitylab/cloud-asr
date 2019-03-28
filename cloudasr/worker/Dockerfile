@@ -3,7 +3,14 @@ MAINTAINER Ondrej Klejch
 
 RUN apt-get update && \
     apt-get install -y build-essential libatlas-base-dev python-dev python-pip git wget gfortran g++ unzip zlib1g-dev automake autoconf libtool subversion && \
-    pip install webrtcvad
+    apt-get autoclean && apt-get update && \
+    apt-get install -y wget software-properties-common build-essential && \
+    wget -qO - http://packages.confluent.io/deb/3.3/archive.key | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] http://packages.confluent.io/deb/3.3 stable main" && \
+    apt-get install -y librdkafka-dev && \
+    pip install --upgrade pip && pip install confluent-kafka && \
+    pip install kafka-python
+
 
 WORKDIR /opt/app/
 RUN git clone https://github.com/choko/alex-asr.git && \
@@ -14,7 +21,7 @@ RUN git clone https://github.com/choko/alex-asr.git && \
     make && \
     python setup.py install
 
-FROM smartcommunitylab/cloud-asr-base 
+FROM smartcommunitylab/cloud-asr-base
 
 WORKDIR /opt/app/
 COPY --from=builder /opt/app .
