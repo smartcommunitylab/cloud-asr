@@ -4,7 +4,7 @@ networks:
     external: true
 services:
   reverseproxy:
-    image: smartcommunitylab/reverseproxy:latest
+    image: smartcommunitylab/reverseproxy:parallel1
     ports:
       - 80:80
       - 8001:8001
