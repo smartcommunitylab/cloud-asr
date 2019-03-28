@@ -1,6 +1,6 @@
 version: '3.7'
 networks:
-  cloudasr_clasr-net:
+  asr-manager_clasr-net:
     external: true
 services:
   reverseproxy:
