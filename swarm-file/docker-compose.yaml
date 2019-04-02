@@ -125,7 +125,7 @@ services:
         networks:
             - clasr-net
     web:
-        image: smartcommunitylab/cloud-asr-web:secret
+        image: smartcommunitylab/cloud-asr-web:noprivacy
         ports:
             - 80 #web_host_port
         depends_on:
@@ -134,7 +134,7 @@ services:
             - CONNECTION_STRING_FILE=/run/secrets/connection_string 
             - API_URL=https://cloudasr.smartcommunitylab.it:8000
             - MASTER_ADDR=tcp://master:5678
-            - RECORDINGS_SAVER_ADDR=tcp://recordings:5682
+             RECORDINGS_SAVER_ADDR=tcp://recordings:5682
             - GOOGLE_LOGIN_CLIENT_ID=""
             - GOOGLE_LOGIN_CLIENT_SECRET=""
             - GA_TRACKING_ID=""
