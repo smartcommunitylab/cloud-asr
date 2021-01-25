@@ -153,4 +153,3 @@ if __name__ == "__main__":
 
     for worker_config in config["workers"]:
         run_worker(config, worker_config)
-

@@ -80,7 +80,7 @@ MYSQL_OPTS=--name mysql \
 	-e MYSQL_DATABASE=${MYSQL_DATABASE} \
 	-v ${MYSQL_PATH}:/var/lib/mysql \
 	-v ${CURDIR}/resources/mysql_utf8.cnf:/etc/mysql/conf.d/mysql_utf8.cnf \
-	-v ${CURDIR}/deployment/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+	-v ${CURDIR}/deployment/script/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
 MYSQL_CONSOLE_CMD=mysql -v --host=mysql_address --user=${MYSQL_PASSWORD} --password=${MYSQL_PASSWORD} ${MYSQL_DATABASE}
 
