@@ -241,9 +241,7 @@ $(document).ready(function() {
     });
 
     $.get(availableWorkersUrl, function(data) {
-    console.log("dataaaaa")
         $.each(data["workers"], function(key, value) {
-        console.log(value);
             models[value["id"]] = value;
             acousticModelSelect.append($("<option></option>").attr("value", value["id"]).text(value["name"]));
         });
