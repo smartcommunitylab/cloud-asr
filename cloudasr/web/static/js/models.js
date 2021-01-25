@@ -5,5 +5,6 @@ var models = {
     "cs": "Czech (VYSTADIAL AM + Wikipedia LM)",
     "cs-alex": "Czech (VYSTADIAL AM + PTIcs LM)",
     "it-small": "Italian",
+    "hu-smallgeminate": "Hungarian",
     "nnet3-es": "Spanish"
 }
