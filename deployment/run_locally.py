@@ -57,7 +57,7 @@ def run_master(config):
         "-e MONITOR_ADDR=tcp://%s:%d" % (IP, MONITOR_STATUS_PORT),
     ]
 
-    run_docker("ufaldsg/cloud-asr-master", config["tag"], opts)
+    run_docker("smartcommunitylab/cloud-asr-master", config["tag"], opts)
 
 def run_api(config):
     opts = [
@@ -68,7 +68,7 @@ def run_api(config):
         "-e CONNECTION_STRING='%s'" % config['connection_string'],
     ]
 
-    run_docker("ufaldsg/cloud-asr-api", config["tag"], opts)
+    run_docker("smartcommunitylab/cloud-asr-api", config["tag"], opts)
 
 
 def run_web(config):
@@ -83,7 +83,7 @@ def run_web(config):
         "-e API_URL=http://%s:%d" % (IP, API_HOST_PORT),
     ]
 
-    run_docker("ufaldsg/cloud-asr-web", config["tag"], opts)
+    run_docker("smartcommunitylab/cloud-asr-web", config["tag"], opts)
 
 def run_monitor(config):
     opts = [
@@ -93,7 +93,7 @@ def run_monitor(config):
         "-e MONITOR_ADDR=tcp://0.0.0.0:%d" % MONITOR_STATUS_PORT,
     ]
 
-    run_docker("ufaldsg/cloud-asr-monitor", config["tag"], opts)
+    run_docker("smartcommunitylab/cloud-asr-monitor", config["tag"], opts)
 
 def run_recordings_saver(config):
     opts = [
@@ -107,7 +107,7 @@ def run_recordings_saver(config):
         "-e DOMAIN=http://localhost:%d" % RECORDINGS_HOST_PORT,
     ]
 
-    run_docker("ufaldsg/cloud-asr-recordings", config["tag"], opts)
+    run_docker("smartcommunitylab/cloud-asr-recordings", config["tag"], opts)
 
 def run_worker(config, worker_config):
     global WORKER_PORT

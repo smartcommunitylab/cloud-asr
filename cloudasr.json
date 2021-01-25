@@ -11,11 +11,12 @@
     "google_login_client_secret": "<google login client secret>",
     "ga_tracking_id": "",
     "workers": [
-        {"image": "ufaldsg/cloud-asr-worker-en-wiki", "model": "en-wiki", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-en-voxforge", "model": "en-voxforge", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-en-towninfo", "model": "en-towninfo", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-cs", "model": "cs", "instances": 4},
-        {"image": "ufaldsg/cloud-asr-worker-cs-alex", "model": "cs-alex", "instances": 4},
+        {"image": "ufaldsg/cloud-asr-worker-en-wiki", "model": "en-wiki", "instances": 1},
+        {"image": "ufaldsg/cloud-asr-worker-en-voxforge", "model": "en-voxforge", "instances": 1},
+        {"image": "ufaldsg/cloud-asr-worker-en-towninfo", "model": "en-towninfo", "instances": 1},
+        {"image": "ufaldsg/cloud-asr-worker-cs", "model": "cs", "instances": 1},
+        {"image": "smartcommunitylab/cloud-asr-worker-it-small", "model": "it-small", "instances": 1},
+        {"image": "smartcommunitylab/cloud-asr-worker-nnet3-es", "model": "nnet3-es", "instances": 1},
         {"image": "ufaldsg/cloud-asr-worker-downloader", "model": "kams-en-hifi", "instances": 1, "env": {
             "MODEL_URL": "https://vystadial.ms.mff.cuni.cz/download/kams/tri5_nnet2_smbr_ivector_online.zip"
         }}

@@ -98,13 +98,15 @@ RECORDINGS_OPTS=--name recordings \
 	${RECORDINGS_VOLUMES}
 
 build:
-	docker build -t ufaldsg/cloud-asr-base cloudasr/shared
-	docker build -t ufaldsg/cloud-asr-web cloudasr/web
-	docker build -t ufaldsg/cloud-asr-api cloudasr/api/
-	docker build -t ufaldsg/cloud-asr-worker --build-arg MODEL_URL="${MODEL_URL}" cloudasr/worker/
-	docker build -t ufaldsg/cloud-asr-master cloudasr/master/
-	docker build -t ufaldsg/cloud-asr-monitor cloudasr/monitor/
-	docker build -t ufaldsg/cloud-asr-recordings cloudasr/recordings/
+	docker build -t smartcommunitylab/cloud-asr-base cloudasr/shared
+	docker build -t smartcommunitylab/cloud-asr-web cloudasr/web
+	docker build -t smartcommunitylab/cloud-asr-api cloudasr/api/
+	docker build -t smartcommunitylab/cloud-asr-worker --build-arg MODEL_URL="${MODEL_URL}" cloudasr/worker/
+	docker build -t smartcommunitylab/cloud-asr-master cloudasr/master/
+	docker build -t smartcommunitylab/cloud-asr-monitor cloudasr/monitor/
+	docker build -t smartcommunitylab/cloud-asr-recordings cloudasr/recordings/
+	docker build -t smartcommunitylab/cloud-asr-worker-it-small:latest examples/worker-it-small/
+    docker build -t smartcommunitylab/cloud-asr-worker-nnet3-es:latest examples/worker_nnet3_es/
 
 build_local:
 	cp -r cloudasr/shared/cloudasr cloudasr/api/cloudasr
@@ -112,11 +114,11 @@ build_local:
 	cp -r cloudasr/shared/cloudasr cloudasr/master/cloudasr
 	cp -r cloudasr/shared/cloudasr cloudasr/monitor/cloudasr
 	cp -r cloudasr/shared/cloudasr cloudasr/recordings/cloudasr
-	docker build -t ufaldsg/cloud-asr-api cloudasr/api/
-	docker build -t ufaldsg/cloud-asr-worker cloudasr/worker/
-	docker build -t ufaldsg/cloud-asr-master cloudasr/master/
-	docker build -t ufaldsg/cloud-asr-monitor cloudasr/monitor/
-	docker build -t ufaldsg/cloud-asr-recordings cloudasr/recordings/
+	docker build -t smartcommunitylab/cloud-asr-api cloudasr/api/
+	docker build -t smartcommunitylab/cloud-asr-worker cloudasr/worker/
+	docker build -t smartcommunitylab/cloud-asr-master cloudasr/master/
+	docker build -t smartcommunitylab/cloud-asr-monitor cloudasr/monitor/
+	docker build -t smartcommunitylab/cloud-asr-recordings cloudasr/recordings/
 	rm -rf cloudasr/api/cloudasr
 	rm -rf cloudasr/worker/cloudasr
 	rm -rf cloudasr/master/cloudasr
@@ -124,16 +126,19 @@ build_local:
 	rm -rf cloudasr/recordings/cloudasr
 
 remove-images:
-	docker images | grep "ufaldsg/" | awk '{print $$3}' | xargs docker rmi
+	docker images | grep "smartcommunitylab/" | awk '{print $$3}' | xargs docker rmi
 
 pull:
 	docker pull mysql:5
-	docker pull ufaldsg/cloud-asr-web
-	docker pull ufaldsg/cloud-asr-api
-	docker pull ufaldsg/cloud-asr-worker
-	docker pull ufaldsg/cloud-asr-master
-	docker pull ufaldsg/cloud-asr-monitor
-	docker pull ufaldsg/cloud-asr-recordings
+	docker pull smartcommunitylab/cloud-asr-web
+	docker pull smartcommunitylab/cloud-asr-api
+	docker pull smartcommunitylab/cloud-asr-worker
+	docker pull smartcommunitylab/cloud-asr-master
+	docker pull smartcommunitylab/cloud-asr-monitor
+	docker pull smartcommunitylab/cloud-asr-recordings
+	docker pull smartcommunitylab/cloud-asr-worker-it-small
+	docker pull smartcommunitylab/cloud-asr-worker-nnet3-es
+
 
 mysql_data:
 	echo "PREPARING MySQL DATABASE"
@@ -147,12 +152,12 @@ check_ip:
 
 run: check_ip mysql_data
 	docker run ${MYSQL_OPTS} -d mysql:5
-	docker run ${WEB_OPTS} -d ufaldsg/cloud-asr-web
-	docker run ${API_OPTS} -d ufaldsg/cloud-asr-api
-	docker run ${WORKER_OPTS} -d ufaldsg/cloud-asr-worker
-	docker run ${MASTER_OPTS} -d ufaldsg/cloud-asr-master
-	docker run ${MONITOR_OPTS} -d ufaldsg/cloud-asr-monitor
-	docker run ${RECORDINGS_OPTS} -d ufaldsg/cloud-asr-recordings
+	docker run ${WEB_OPTS} -d smartcommunitylab/cloud-asr-web
+	docker run ${API_OPTS} -d smartcommunitylab/cloud-asr-api
+	docker run ${WORKER_OPTS} -d smartcommunitylab/cloud-asr-worker
+	docker run ${MASTER_OPTS} -d smartcommunitylab/cloud-asr-master
+	docker run ${MONITOR_OPTS} -d smartcommunitylab/cloud-asr-monitor
+	docker run ${RECORDINGS_OPTS} -d smartcommunitylab/cloud-asr-recordings
 
 run_locally: check_ip mysql_data
 	bash <( python ${CURDIR}/deployment/run_locally.py ${IP} ${CURDIR}/cloudasr.json )
@@ -168,22 +173,22 @@ run_mesos:
 	python ${CURDIR}/deployment/run_on_mesos.py ${CURDIR}/cloudasr.json
 
 run_worker:
-	docker run ${WORKER_OPTS} -i -t --rm ufaldsg/cloud-asr-worker
+	docker run ${WORKER_OPTS} -i -t --rm smartcommunitylab/cloud-asr-worker
 
 run_web:
-	docker run ${WEB_OPTS} -i -t --rm ufaldsg/cloud-asr-web python run.py
+	docker run ${WEB_OPTS} -i -t --rm smartcommunitylab/cloud-asr-web python run.py
 
 run_api:
-	docker run ${API_OPTS} -i -t --rm ufaldsg/cloud-asr-api python run.py
+	docker run ${API_OPTS} -i -t --rm smartcommunitylab/cloud-asr-api python run.py
 
 run_master:
-	docker run ${MASTER_OPTS} -i -t --rm ufaldsg/cloud-asr-master
+	docker run ${MASTER_OPTS} -i -t --rm smartcommunitylab/cloud-asr-master
 
 run_monitor:
-	docker run ${MONITOR_OPTS} -i -t --rm ufaldsg/cloud-asr-monitor
+	docker run ${MONITOR_OPTS} -i -t --rm smartcommunitylab/cloud-asr-monitor
 
 run_recordings:
-	docker run ${RECORDINGS_OPTS} -i -t --rm ufaldsg/cloud-asr-recordings
+	docker run ${RECORDINGS_OPTS} -i -t --rm smartcommunitylab/cloud-asr-recordings
 
 stop:
 	docker kill api worker master monitor recordings mysql web
@@ -198,11 +203,11 @@ unit-test:
 	PYTHONPATH=${CURDIR}/cloudasr/shared python2.7 -m nose -e test_factory cloudasr/recordings
 
 integration-test:
-	docker run ${API_VOLUMES} --rm ufaldsg/cloud-asr-api python2.7 -m nose /opt/app/test_factory.py
-	docker run ${MASTER_VOLUMES} --rm ufaldsg/cloud-asr-master python2.7 -m nose /opt/app/test_factory.py
-	docker run ${MONITOR_VOLUMES} --rm ufaldsg/cloud-asr-monitor python2.7 -m nose /opt/app/test_factory.py
-	docker run ${RECORDINGS_VOLUMES} --rm ufaldsg/cloud-asr-recordings python2.7 -m nose /opt/app/test_factory.py
-	docker run ${WORKER_VOLUMES} --rm ufaldsg/cloud-asr-worker python2.7 -m nose /opt/app/test_factory.py /opt/app/test_vad.py
+	docker run ${API_VOLUMES} --rm smartcommunitylab/cloud-asr-api python2.7 -m nose /opt/app/test_factory.py
+	docker run ${MASTER_VOLUMES} --rm smartcommunitylab/cloud-asr-master python2.7 -m nose /opt/app/test_factory.py
+	docker run ${MONITOR_VOLUMES} --rm smartcommunitylab/cloud-asr-monitor python2.7 -m nose /opt/app/test_factory.py
+	docker run ${RECORDINGS_VOLUMES} --rm smartcommunitylab/cloud-asr-recordings python2.7 -m nose /opt/app/test_factory.py
+	docker run ${WORKER_VOLUMES} --rm smartcommunitylab/cloud-asr-worker python2.7 -m nose /opt/app/test_factory.py /opt/app/test_vad.py
 
 test:
 	python2.7 -m nose tests/

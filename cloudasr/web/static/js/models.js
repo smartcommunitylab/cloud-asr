@@ -4,5 +4,6 @@ var models = {
     "en-towninfo": "English (VYSTADIAL TownInfo AM+LM)",
     "cs": "Czech (VYSTADIAL AM + Wikipedia LM)",
     "cs-alex": "Czech (VYSTADIAL AM + PTIcs LM)",
-    "it-small": "Italian"
+    "it-small": "Italian",
+    "nnet3-es": "Spanish"
 }

@@ -8,3 +8,4 @@ docker build -t smartcommunitylab/cloud-asr-master:latest cloudasr/master/
 docker build -t smartcommunitylab/cloud-asr-monitor:latest cloudasr/monitor/
 docker build -t smartcommunitylab/cloud-asr-recordings:latest cloudasr/recordings/
 docker build -t smartcommunitylab/cloud-asr-worker-it-small:latest examples/worker-it-small/
+docker build -t smartcommunitylab/cloud-asr-worker-nnet3-es:latest examples/worker_nnet3_es/
